@@ -1,0 +1,78 @@
+#include <Arduino.h>
+
+#define motorlf 6
+#define motorlb 7
+#define motorls 5
+#define motorrf 10
+#define motorrb 11
+#define motorrs 9
+
+#define sensorL 12
+#define sensorR 13
+
+// int sensorvalue = 0;
+
+void setup() {
+  pinMode(motorlf, OUTPUT);
+  pinMode(motorlb, OUTPUT);
+  pinMode(motorrf, OUTPUT);
+  pinMode(motorrb, OUTPUT);
+  pinMode(sensorL, INPUT);
+  pinMode(sensorR, INPUT);
+  Serial.begin(9600);
+}
+
+/*void loop(){
+  analogWrite(motorls, 50);
+  digitalWrite(motorlf, HIGH);
+  digitalWrite(motorlb, LOW);
+  //digitalRead(sensorL);
+  sensorvalue = digitalRead(sensorL);
+  Serial.print(" value : ");
+  Serial.println(sensorvalue);
+  delay(200);
+}*/
+void motor_control(char L, char R, int m1_speed, int m2_speed){
+  if(L == 1){
+    digitalWrite(motorlf, HIGH);
+    digitalWrite(motorlb, LOW);
+    analogWrite(motorls, m1_speed);
+  }
+  else if(L == 0){
+    digitalWrite(motorlf, LOW);
+    digitalWrite(motorlb, HIGH);
+    analogWrite(motorls, m1_speed);
+  }
+  if(R == 1){
+    digitalWrite(motorrf, HIGH);
+    digitalWrite(motorrb, LOW);
+    analogWrite(motorrs, m2_speed);
+  }
+  else if(R == 0){
+    digitalWrite(motorrf, LOW);
+    digitalWrite(motorrb, HIGH);
+    analogWrite(motorrs, m2_speed);
+  }
+}
+
+int infraRed_value = 0;
+
+int sensor_read(int i){
+  infraRed_value = digitalRead(i);
+  return infraRed_value;
+}
+
+void loop() {
+  if(sensor_read(sensorL) == 1 && sensor_read(sensorR) == 1){
+    motor_control(1, 1, 200, 200);
+  }
+  else if(sensor_read(sensorL) == 1 && sensor_read(sensorR) != 1){
+    motor_control(1, 1, 250, 70);
+  }
+  else if(sensor_read(sensorR) != 1 && sensor_read(sensorL) == 1){
+    motor_control(1, 1, 70, 250);
+  }
+  else{
+    motor_control(1, 1, 200, 200);
+  }
+}
