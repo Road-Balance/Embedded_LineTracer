@@ -16,5 +16,5 @@ void loop()
     SensorValue = digitalRead(IRSENSOR);
     Serial.print(" sensor =  ");
     Serial.println(SensorValue);
-    delay(200);
+    delay(200); // 수정수정
 }
